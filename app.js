@@ -110,7 +110,7 @@ function home() {
     <small>${due ? due + (due === 1 ? ' palabra lista' : ' palabras listas') + ' para repasar' : '¡Estás al día! Vuelve mañana'}</small></div></button>
   ${CONTENT.stages.map(st => `<section><h2>${st.name}</h2><p class="sub">${st.sub}</p>
     <div class="grid">${U.filter(u => u.stage === st.id).map(tile).join('')}</div></section>`).join('')}
-  <footer><button class="link" id="parent">👪 Panel para papá/mamá</button></footer>`;
+  <footer><button class="btn small" id="share">📤 Enviar mi resumen a papá/mamá</button><br><button class="link" id="parent">👪 Panel para papá/mamá</button></footer>`;
   $('#rev').onclick = () => due ? startReview() : toast('Hoy no hay nada por repasar. ¡Haz una unidad nueva!');
   app.querySelectorAll('.tile').forEach(b => {
     b.onclick = () => {
@@ -118,6 +118,7 @@ function home() {
       unlocked(u) ? intro(u) : toast('Primero completa la unidad anterior (al menos 1 estrella).');
     };
   });
+  $('#share').onclick = sendSummary;
   $('#parent').onclick = parent;
 }
 
@@ -351,6 +352,35 @@ function finish() {
   if (st >= 1) tone([523, 659, 784, 1046]);
 }
 
+// ---------- Resumen para compartir (WhatsApp, etc.) ----------
+function summaryText() {
+  const d = day();
+  const days = Array.from({ length: 7 }, (_, i) => S.log[d - i]).filter(Boolean);
+  const lessons = days.reduce((a, l) => a + l.lessons, 0), xp = days.reduce((a, l) => a + l.xp, 0);
+  const keys = Object.keys(S.items).filter(k => ITEM[k]);
+  const mastered = keys.filter(k => S.items[k].box >= 4).length;
+  const hard = keys.filter(k => S.items[k].wrong).sort((a, b) => S.items[b].wrong - S.items[a].wrong).slice(0, 5).map(k => ITEM[k].v[0]);
+  const done = U.filter(u => stars(u) >= 1);
+  const lastU = done.length ? done[done.length - 1] : null;
+  const streak = S.last >= d - 1 ? S.streak : 0;
+  return [
+    `📘 English Quest — resumen de ${S.name}`,
+    `📅 Últimos 7 días: practicó ${days.length} de 7 días · ${lessons} ${lessons === 1 ? "lección" : "lecciones"} · ${xp} puntos`,
+    `🔥 Racha actual: ${streak} ${streak === 1 ? 'día' : 'días'}`,
+    `🔤 Palabras vistas: ${keys.length} · bien aprendidas: ${mastered}`,
+    `🏆 Unidades superadas: ${done.length} de ${U.length}${lastU ? ` (última: ${lastU.title})` : ''}`,
+    hard.length ? `💪 Le cuestan: ${hard.join(', ')}` : '💪 Aún sin palabras difíciles registradas',
+  ].join('\n');
+}
+async function sendSummary() {
+  const text = summaryText();
+  try {
+    if (navigator.share) { await navigator.share({ text }); return; }
+  } catch (e) { if (e && e.name === 'AbortError') return; }
+  try { await navigator.clipboard.writeText(text); toast('Resumen copiado. Pégalo en WhatsApp.'); } catch { /* sin portapapeles */ }
+  window.open('https://wa.me/?text=' + encodeURIComponent(text), '_blank');
+}
+
 // ---------- Panel para adultos ----------
 function parent() {
   const keys = Object.keys(S.items).filter(k => ITEM[k]);
@@ -369,8 +399,9 @@ function parent() {
     <h3>Palabras que más le cuestan</h3>
     ${hard.length ? `<ul>${hard.map(k => `<li><b>${esc(ITEM[k].v[0])}</b> — ${esc(ITEM[k].v[1])} <small>(${S.items[k].wrong} fallos)</small></li>`).join('')}</ul>` : '<p class="sub">Todavía no hay datos.</p>'}
     <h3>Datos</h3><p class="sub">El progreso se guarda solo en este dispositivo. Descarga una copia si quieres respaldarlo.</p>
-    <button class="btn small" id="exp">Descargar progreso</button> <button class="btn small danger" id="rst">Borrar todo</button></div></div>`;
+    <button class="btn small" id="shr">Enviar resumen</button> <button class="btn small" id="exp">Descargar progreso</button> <button class="btn small danger" id="rst">Borrar todo</button></div></div>`;
   $('#x').onclick = home;
+  $('#shr').onclick = sendSummary;
   $('#exp').onclick = () => {
     const a = document.createElement('a');
     a.href = URL.createObjectURL(new Blob([JSON.stringify(S, null, 1)], { type: 'application/json' }));

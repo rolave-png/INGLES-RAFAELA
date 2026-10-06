@@ -15,6 +15,7 @@ Para el micrófono y la voz conviene usar Chrome o Safari.
 - **Feedback inmediato**: explicación en español; lo fallado vuelve a aparecer en la misma lección.
 - **Repaso espaciado** (cajas de Leitner, 1-2-4-8-16 días) con el "Repaso del día".
 - **Progreso**: estrellas (70/85/100%), puntos, racha; la siguiente unidad se desbloquea con 1 estrella.
+- **Resumen para compartir**: botón "Enviar mi resumen" arma un texto semanal y lo manda por WhatsApp (o lo copia).
 - **Panel para adultos**: palabras vistas/aprendidas, actividad semanal, palabras difíciles, respaldo del progreso.
 
 ## Ampliar contenido
