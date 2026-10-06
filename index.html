@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>English Quest</title>
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon.svg">
+<meta name="theme-color" content="#6c5ce7">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div id="app"></div>
+<div id="toast" hidden></div>
+<script src="content.js"></script>
+<script src="app.js"></script>
+<script>if ('serviceWorker' in navigator && location.protocol !== 'file:') navigator.serviceWorker.register('sw.js');</script>
+</body>
+</html>
