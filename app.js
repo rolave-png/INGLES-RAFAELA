@@ -108,6 +108,7 @@ function home() {
     <div class="chips"><span title="Días seguidos">🔥 ${streak}</span><span title="Puntos">⭐ ${S.xp}</span></div></header>
   <button class="review ${due ? '' : 'off'}" id="rev"><span>🧠</span><div><b>Repaso del día</b>
     <small>${due ? due + (due === 1 ? ' palabra lista' : ' palabras listas') + ' para repasar' : '¡Estás al día! Vuelve mañana'}</small></div></button>
+  <a class="lang" href="chino/"><span>🇨🇳</span><div><b>¿Quieres aprender chino?</b><small>Abre Mandarín Quest</small></div></a>
   ${CONTENT.stages.map(st => `<section><h2>${st.name}</h2><p class="sub">${st.sub}</p>
     <div class="grid">${U.filter(u => u.stage === st.id).map(tile).join('')}</div></section>`).join('')}
   <footer><button class="btn small" id="share">📤 Enviar mi resumen a papá/mamá</button><br><button class="link" id="parent">👪 Panel para papá/mamá</button></footer>`;

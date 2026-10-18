@@ -20,3 +20,6 @@ Para el micrófono y la voz conviene usar Chrome o Safari.
 
 ## Ampliar contenido
 Agregar un objeto a `units` en `content.js` (ver formato en el comentario inicial). Nuevas etapas: agregar a `stages`.
+
+## Mandarín Quest
+La carpeta `chino/` es una app hermana para aprender mandarín (misma estructura). Se abre desde el botón de la pantalla de inicio o en `/chino/`.
